@@ -1,4 +1,3 @@
-using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,25 +5,24 @@ public class SerializeInterface : PropertyAttribute, ISerializationCallbackRecei
 {
     public void OnBeforeSerialize()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("a");
     }
 
     public void OnAfterDeserialize()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("b");
     }
 }
 
 [CustomPropertyDrawer(typeof(SerializeInterface))]
 public class InterfaceDrawer : PropertyDrawer
 {
-    public GameObject obj;
-    
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         var serializeInterface = attribute as SerializeInterface;
         EditorGUI.BeginProperty(position, label, property);
-        obj = (GameObject)EditorGUI.ObjectField(position, label.text, obj, fieldInfo.FieldType, true);
+        var obj = EditorGUI.ObjectField(position, label.text, property.exposedReferenceValue, fieldInfo.FieldType, true);
+        fieldInfo.SetValue(property.serializedObject.targetObject, obj);
         EditorGUI.EndProperty(); 
     }
 }
